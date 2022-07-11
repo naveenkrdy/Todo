@@ -1,6 +1,4 @@
 let todoListContainerEl = document.getElementById('todoListContainer');
-let addBtnEl = document.getElementById('addBtn');
-
 
 let todoList = [
     {
@@ -15,11 +13,7 @@ let todoList = [
 ];
 
 let storedTodoList = localStorage.getItem('todoList');
-if (storedTodoList) {
-    console.log('storedlist', typeof storedTodoList, storedTodoList);
-    todoList = JSON.parse(storedTodoList);
-}
-
+if (storedTodoList) todoList = JSON.parse(storedTodoList);
 
 function completeTodo(todoItemContainerId, todoItemLabelId) {
     let todoItemContainerEl = document.getElementById(todoItemContainerId);
@@ -33,9 +27,11 @@ function deleteTodo(todoItemContainerId) {
     let todoItemContainerEl = document.getElementById(todoItemContainerId);
     let uniqueId = todoItemContainerId.slice(-1);
 
-    for (let index in todoList) {
-        if (todoList[index].uniqueId == uniqueId) todoList.splice(index, 1);
-    }
+    index = todoList.findIndex(function (todo) {
+        if (todo.uniqueId == uniqueId) return true;
+        return false;
+    });
+    todoList.splice(index, 1);
 
     if (todoList.length === 0) localStorage.removeItem('todoList');
     else localStorage.setItem('todoList', JSON.stringify(todoList));
@@ -87,6 +83,7 @@ function createTodo(todo) {
 
 }
 
+let addBtnEl = document.getElementById('addBtn');
 addBtnEl.onclick = function () {
     let todoTextInputEl = document.getElementById('todoTextInput');
     if (todoTextInputEl.value) {
