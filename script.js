@@ -1,7 +1,8 @@
 let todoListContainerEl = document.getElementById('todoListContainer');
 let addBtnEl = document.getElementById('addBtn');
 
-todoList = [
+
+let todoList = [
     {
         name: 'Sample task 1',
         uniqueId: 1
@@ -12,6 +13,12 @@ todoList = [
     },
 
 ];
+
+let storedTodoList = localStorage.getItem('todoList');
+if (storedTodoList) {
+    console.log('storedlist', typeof storedTodoList, storedTodoList);
+    todoList = JSON.parse(storedTodoList);
+}
 
 
 function completeTodo(todoItemContainerId, todoItemLabelId) {
@@ -24,6 +31,15 @@ function completeTodo(todoItemContainerId, todoItemLabelId) {
 
 function deleteTodo(todoItemContainerId) {
     let todoItemContainerEl = document.getElementById(todoItemContainerId);
+    let uniqueId = todoItemContainerId.slice(-1);
+
+    for (let index in todoList) {
+        if (todoList[index].uniqueId == uniqueId) todoList.splice(index, 1);
+    }
+
+    if (todoList.length === 0) localStorage.removeItem('todoList');
+    else localStorage.setItem('todoList', JSON.stringify(todoList));
+
     todoListContainerEl.removeChild(todoItemContainerEl);
 }
 
@@ -78,6 +94,9 @@ addBtnEl.onclick = function () {
             name: todoTextInputEl.value,
             uniqueId: todoList.length + 1
         };
+
+        todoList.push(newTodo);
+        localStorage.setItem('todoList', JSON.stringify(todoList));
         createTodo(newTodo);
         todoTextInputEl.value = '';
     }
