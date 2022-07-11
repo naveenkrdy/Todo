@@ -12,8 +12,9 @@ body {
 .todo-input-container {
     border-radius: 0px 0px 5px 5px;
     box-shadow: 0px 4px #0000002b;
-    width: 50%;
+    width: 90%;
 }
+
 
 .todo-label {
     background-color: #adff2f;
@@ -64,7 +65,8 @@ body {
     box-shadow: 0px 4px #0000002b;
     margin-bottom: 15px;
     padding: 10px;
-    width: 50%;
+    width: 90%;
+    z-index: 2;
 }
 
 .todo-item-container-completed {
@@ -78,11 +80,12 @@ body {
 }
 
 .todo-item-label-container {
+   overflow-wrap: break-word;
     width: 100%;
 }
 
 .todo-item-label {
-    width: 75%;
+    width: 95%;
 }
 
 .todo-item-label-completed {
@@ -90,19 +93,31 @@ body {
 }
 
 .todo-item-delete-icon-container {
+    margin-left: 20px;
     margin-right: 5px;
-    text-align: end;
-    width: 25%;
+    text-align: center;
+    width: 5%;
 }
 
 .footer {
-text-align: center;
 padding: 20px;
+text-align: center;
+z-index: 1;
 }
 
 .github-link {
     color: #383838e3;
-    text-decoration: none;
     font-size: 20px;
+    text-decoration: none;
     transition: 0.5s;
 }
+
+@media screen and (min-width: 900px) {
+    .todo-input-container {
+        width: 50%;
+    }
+
+    .todo-item-container {
+        width: 50%;
+    }
+  }
