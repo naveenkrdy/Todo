@@ -9,6 +9,16 @@ let todoList = [
     {
         name: 'Sample task 2',
         uniqueId: 2,
+        isCompleted: true
+    },
+    {
+        name: 'Sample task 3',
+        uniqueId: 3,
+        isCompleted: false
+    },
+    {
+        name: 'Sample task 4',
+        uniqueId: 4,
         isCompleted: false
     },
 
