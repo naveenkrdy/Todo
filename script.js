@@ -17,40 +17,30 @@ let todoList = [
 let storedTodoList = localStorage.getItem('todoList');
 if (storedTodoList) todoList = JSON.parse(storedTodoList);
 
-function getIndex(todoItemContainerEl) {
-    const uniqueId = parseInt(todoItemContainerEl.slice(-1));
-    return todoList.findIndex(function (todo) {
-        if (todo.uniqueId === uniqueId) return true;
-        return false;
-    });
-}
-
 function completeTodo(todoItemContainerId, todoItemLabelId) {
     let todoItemContainerEl = document.getElementById(todoItemContainerId);
-    let todoItemLabelEl = document.getElementById(todoItemLabelId);
-
-    index = getIndex(todoItemContainerId);
-    todoList[index].isCompleted = true;
-    localStorage.setItem('todoList', JSON.stringify(todoList));
-
     todoItemContainerEl.classList.toggle('todo-item-container-completed');
+
+    let todoItemLabelEl = document.getElementById(todoItemLabelId);
     todoItemLabelEl.classList.toggle('todo-item-label-completed');
 }
 
-function deleteTodo(todoItemContainerId) {
-    let todoItemContainerEl = document.getElementById(todoItemContainerId);
-
-    index = getIndex(todoItemContainerId);
+function deleteTodo(todoItemContainerId, uniqueId) {
+    const index = todoList.findIndex(function (todo) {
+        if (todo.uniqueId === uniqueId) return true;
+        return false;
+    });
     todoList.splice(index, 1);
 
     if (todoList.length === 0) localStorage.removeItem('todoList');
     else localStorage.setItem('todoList', JSON.stringify(todoList));
 
+    let todoItemContainerEl = document.getElementById(todoItemContainerId);
     todoListContainerEl.removeChild(todoItemContainerEl);
 }
 
 function createTodo(todo) {
-    const { name, uniqueId } = todo;
+    let { name, uniqueId, isCompleted } = todo;
     const todoItemContainerId = 'todoItemContainer' + uniqueId;
     const todoItemCheckBoxInputId = 'todoItemCheckBoxInput' + uniqueId;
     const todoItemLabelId = 'todoItemLabel' + uniqueId;
@@ -63,8 +53,9 @@ function createTodo(todo) {
     let todoItemCheckboxInputEl = document.createElement('input');
     todoItemCheckboxInputEl.type = 'checkbox';
     todoItemCheckboxInputEl.id = todoItemCheckBoxInputId;
-
     todoItemCheckboxInputEl.onclick = function () {
+        todo.isCompleted = isCompleted ? false : true;
+        localStorage.setItem('todoList', JSON.stringify(todoList));
         completeTodo(todoItemContainerId, todoItemLabelId);
     };
 
@@ -88,13 +79,13 @@ function createTodo(todo) {
 
     let deleteIconEl = document.createElement('i');
     deleteIconEl.onclick = function () {
-        deleteTodo(todoItemContainerId);
+        deleteTodo(todoItemContainerId, uniqueId);
     };
     deleteIconEl.classList.add('bi', 'bi-trash');
     deleteIconContainerEl.appendChild(deleteIconEl);
 
-    if (todo.isCompleted) {
-        todoItemCheckboxInputEl.checked = todo.isCompleted;
+    if (isCompleted) {
+        todoItemCheckboxInputEl.checked = isCompleted;
         completeTodo(todoItemContainerId, todoItemLabelId);
     }
 }
@@ -112,6 +103,7 @@ addBtnEl.onclick = function () {
         todoList.push(newTodo);
         localStorage.setItem('todoList', JSON.stringify(todoList));
         createTodo(newTodo);
+
         todoTextInputEl.value = '';
     }
     else {
